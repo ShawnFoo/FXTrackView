@@ -89,6 +89,7 @@
              
              DemoBulletinItemData *data = [DemoBulletinItemData dataWithDesc:[NSString stringWithFormat:@"item-%@", @(bIndex++)]
                                                                   avatarName:[NSString stringWithFormat:@"avatar%@", @(arc4random()%6)]];
+//             data.animate = FXDataAnimateExtension;
              [self.bulletinBoard addData:data];
          }];
     }

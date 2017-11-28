@@ -13,6 +13,11 @@ typedef NS_ENUM(NSUInteger, FXDataPriority) {
     FXDataPriorityHigh
 };
 
+typedef NS_ENUM(NSUInteger, FXDataAnimate) {
+    FXDataAnimateDefault,
+    FXDataAnimateExtension
+};
+
 NS_ASSUME_NONNULL_BEGIN
 /**
  FXDanmakuItemData plays an important role to FXDanmakuItem as the view model. FXDanmakuItemData should supply FXDanmakuItem with any datas item requires. One kind of FXDanmakuItemData should only be used by a specified FXDanmakuItem via itemReuseIdentifier property.
@@ -29,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) FXDataPriority priority;
 
+@property (nonatomic, assign) FXDataAnimate animate;
 
 // Note: Identifier can't be nil or empty string!
 

@@ -1,12 +1,15 @@
 PODS:
+  - JHChainableAnimations (2.0.2)
   - Masonry (1.0.2)
 
 DEPENDENCIES:
+  - JHChainableAnimations (~> 2.0)
   - Masonry (~> 1.0.2)
 
 SPEC CHECKSUMS:
+  JHChainableAnimations: b6fe3fae7e728d71eaa9491bc6f77c30ee121fc4
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
 
-PODFILE CHECKSUM: 4b3702a9be90c3d25fd359afa7bed7f2850f93be
+PODFILE CHECKSUM: 7592277ad0d72021c03aaef75bfddb76d5d80aff
 
 COCOAPODS: 1.1.1

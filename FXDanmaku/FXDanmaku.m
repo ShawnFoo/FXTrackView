@@ -18,6 +18,7 @@
 #import "FXDanmakuItem_Private.h"
 #import "FXGCDTimer.h"
 #import "FXGCDOperationQueue.h"
+#import <JHChainableAnimations/JHChainableAnimations.h>
 
 typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     StatusNotStarted,
@@ -817,22 +818,27 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     CGRect toFrame = item.frame;
     toFrame.origin.x = moveFromLeftToRight ? self.frame.size.width : -itemWidth;
     
-    [item layoutIfNeeded];
-    [UIView animateWithDuration:animDuration
-                          delay:0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^
-     {
-         item.frame = toFrame;
-         [self layoutIfNeeded];
-     }
-                     completion:^(BOOL finished)
-     {
-         [item removeFromSuperview];
-         [self.rowItemsManager[@(row)] removeDanmakuItem:item];
-         [self notifyDelegateDidEndDisplayingItem:item];
-         [self.reuseItemQueue enqueueReuseObject:(FXReuseObject)item];
-     }];
+    CGFloat centerX = (self.frame.size.width - toFrame.size.width) * 0.5f;
+    __weak __typeof(&*self)weakSelf = self;
+    __weak FXDanmakuItem *weakItem = item;
+    JHChainableAnimator *animator = [[JHChainableAnimator alloc] initWithView:item];
+    animator.completionBlock = ^{
+        [weakItem removeFromSuperview];
+        [weakSelf.rowItemsManager[@(row)] removeDanmakuItem:weakItem];
+        [weakSelf notifyDelegateDidEndDisplayingItem:weakItem];
+        [weakSelf.reuseItemQueue enqueueReusableObject:(FXReuseObject)weakItem];
+    };
+    if (data.animate == FXDataAnimateDefault) {
+        animator.makeX(toFrame.origin.x).animate(animDuration);
+    } else {
+        CGFloat itemInDuration = 0.5f;
+        CGFloat waitDuration = animDuration - itemInDuration * 2;
+        resetTime = animDuration - itemInDuration;
+        if (waitDuration < 0) {
+            waitDuration = 0.1f;
+        }
+        animator.makeX(centerX).thenAfter(itemInDuration).wait(waitDuration).makeX(toFrame.origin.x).animate(itemInDuration);
+    }
     
     @FXWeakify(self);
     FXGCDTimer *resetTimer = [FXGCDTimer scheduledTimerWithInterval:resetTime
