@@ -22,8 +22,8 @@ High-performance danmaku with click event, reusable items and customize configur
 
 ## Preview
 
-![](http://wx4.sinaimg.cn/large/9161297cgy1fd0v5dm59gg209o0h77wj.gif) 
-![](http://wx2.sinaimg.cn/large/9161297cgy1fcylkvn3arg20hy0a1x6p.gif)
+![](https://github.com/ShawnFoo/FXDanmaku/blob/master/Images/preview1.gif?raw=true) 
+![](https://github.com/ShawnFoo/FXDanmaku/blob/master/Images/preview2.gif?raw=true)
 
 ## Example
 
