@@ -8,7 +8,7 @@
 
 #import "SingleRowVC.h"
 #import "FXDanmaku.h"
-#import "NSTimer+FXWeakTimer.h"
+#import "NSTimer+FXWeakTarget.h"
 #import "DemoBulletinItem.h"
 #import "DemoBulletinItemData.h"
 #import "NSObject+FXAlertView.h"
@@ -78,19 +78,16 @@
         __block NSUInteger bIndex = 0;
         __weak typeof(self) weakSelf = self;
         self.addDataTimer =
-        [NSTimer fx_scheduledTimerWithInterval:0.5
-                                        target:self
-                                       repeats:YES
-                                         queue:self.serialQueue
-                                         block:^
-         {
-             typeof(self) self = weakSelf;
-             if (!self) return;
-             
-             DemoBulletinItemData *data = [DemoBulletinItemData dataWithDesc:[NSString stringWithFormat:@"item-%@", @(bIndex++)]
-                                                                  avatarName:[NSString stringWithFormat:@"avatar%@", @(arc4random()%6)]];
-             [self.bulletinBoard addData:data];
-         }];
+		[NSTimer fx_scheduledRepeatedTimerWithInterval:0.5
+												target:self
+												 block:^(NSTimer *timer)
+		{
+			typeof(self) self = weakSelf;
+			if (!self) return;
+			DemoBulletinItemData *data = [DemoBulletinItemData dataWithDesc:[NSString stringWithFormat:@"item-%@", @(bIndex++)]
+																 avatarName:[NSString stringWithFormat:@"avatar%@", @(arc4random()%6)]];
+			[self.bulletinBoard addData:data];
+		}];
     }
 }
 

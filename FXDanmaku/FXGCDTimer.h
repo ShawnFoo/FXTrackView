@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^FXTimerBlock)();
-
 @interface FXGCDTimer : NSObject
 
 /**
@@ -24,11 +22,11 @@ typedef void (^FXTimerBlock)();
 
 + (instancetype)scheduledTimerWithInterval:(NSTimeInterval)interval
                                      queue:(dispatch_queue_t)queue
-                                     block:(FXTimerBlock)block;
+                                     block:(dispatch_block_t)block;
 
 + (instancetype)scheduledRepeatTimerWithInterval:(NSTimeInterval)interval
                                            queue:(dispatch_queue_t)queue
-                                           block:(FXTimerBlock)block;
+                                           block:(dispatch_block_t)block;
 
 - (void)invalidate;
 

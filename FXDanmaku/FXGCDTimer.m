@@ -10,7 +10,7 @@
 
 @interface FXGCDTimer ()
 
-@property (nonatomic, copy) FXTimerBlock block;
+@property (nonatomic, copy) dispatch_block_t block;
 @property (nonatomic, strong) dispatch_queue_t blockQueue;
 @property (nonatomic, weak) dispatch_source_t sourceTimer;
 @property (nonatomic, strong) dispatch_semaphore_t syncSemophore;
@@ -34,7 +34,7 @@
 
 + (instancetype)scheduledTimerWithInterval:(NSTimeInterval)interval
                                      queue:(dispatch_queue_t)queue
-                                     block:(FXTimerBlock)block
+                                     block:(dispatch_block_t)block
 {
     return [self scheduledTimerWithInterval:interval
                                      repeat:NO
@@ -44,7 +44,7 @@
 
 + (instancetype)scheduledRepeatTimerWithInterval:(NSTimeInterval)interval
                                            queue:(dispatch_queue_t)queue
-                                           block:(FXTimerBlock)block
+                                           block:(dispatch_block_t)block
 {
     return [self scheduledTimerWithInterval:interval
                                      repeat:YES
@@ -55,7 +55,7 @@
 + (instancetype)scheduledTimerWithInterval:(NSTimeInterval)interval
                                     repeat:(BOOL)repeat
                                      queue:(dispatch_queue_t)queue
-                                     block:(FXTimerBlock)block
+                                     block:(dispatch_block_t)block
 {
     FXGCDTimer *timer = nil;
     if (block) {

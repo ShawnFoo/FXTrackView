@@ -2,7 +2,7 @@
 
 [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-Readme-lightgrey.svg)](http://www.jianshu.com/p/42a665b1731d)
 ![iOS 7.0+](https://img.shields.io/badge/iOS-7.0%2B-orange.svg)
-![pod](https://img.shields.io/badge/Cocoapods-v1.0.4-blue.svg)
+![pod](https://img.shields.io/badge/Cocoapods-v1.0.5-blue.svg)
 ![compatible](https://img.shields.io/badge/Compatible-Objective--C%2FSwift-yellow.svg)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ShawnFoo/FXDanmaku/blob/master/LICENSE)
 
@@ -22,7 +22,7 @@ High-performance danmaku with click event, reusable items and customize configur
 
 ## Preview
 
-![](https://github.com/ShawnFoo/FXDanmaku/blob/master/Images/preview1.gif?raw=true) 
+![](https://github.com/ShawnFoo/FXDanmaku/blob/master/Images/preview1.gif?raw=true)
 ![](https://github.com/ShawnFoo/FXDanmaku/blob/master/Images/preview2.gif?raw=true)
 
 ## Example
@@ -44,7 +44,7 @@ self.danmaku.delegate = self;
 // Reuse
 [self.danmaku registerNib:[UINib nibWithNibName:NSStringFromClass([DemoDanmakuItem class]) bundle:nil]
    forItemReuseIdentifier:[DemoDanmakuItem reuseIdentifier]];
-[self.danmaku registerClass:[DemoBulletinItem class] 
+[self.danmaku registerClass:[DemoBulletinItem class]
      forItemReuseIdentifier:[DemoBulletinItem reuseIdentifier]];
 ```
 Add data:
@@ -66,7 +66,7 @@ Handle click in delegate method:
 	// handle click event here
 }
 ```
-More examples in `FXDanmakuDemo.xcworkspace`. 
+More examples in `FXDanmakuDemo.xcworkspace`.
 
 Demo build succeed in Xcode8.
 
@@ -83,39 +83,39 @@ Last thing, drag IBOutlet property to setup your custom danmakuItem.
 
 #### 3. Adaptation to the change of device orientaion.
 
-Only when your danmaku view's height will change in different device orientaion, should you do a little work to adapt. Otherwise, you won't need to add any codes.	
+Only when your danmaku view's height will change in different device orientaion, should you do a little work to adapt. Otherwise, you won't need to add any codes.
 Let's say, your danmaku view's height is 100pt in portrait, but is 200pt in lanscape. Then add codes below in your controller.
-	
+
 *For iOS8 And Later*
 
 	- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     	[self.danmaku pause];
     	[self.danmaku cleanScreen];
-    
+
     	[coordinator animateAlongsideTransition:nil
-									 completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+									 completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
                                      	// resume danmaku after orientation did change
                                      	[self.danmaku start];
                                  	 }];
 	}
-		
+
 *For version lower than iOS8*
 
 	- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     		[self.danmaku pause];
     		[self.danmaku cleanScreen];
 	}
-		
+
 	- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     		[self.danmaku start];
 	}
-	
+
 #### 4. How to limit the capacity of the data queue to the FXDanmaku view?
 
 ```
 // By setting the FXDanmakuConfiguration
 FXDanmakuConfiguration *config = [FXDanmakuConfiguration defaultConfiguration];
-// The number of FXDanmakuItemData that FXDanmaku view can hold at maximum count. 
+// The number of FXDanmakuItemData that FXDanmaku view can hold at maximum count.
 config.dataQueueCapacity = 500;
 // Beyond this value, the data will be discarded.
 ```
@@ -134,8 +134,8 @@ FXDanmaku requires `iOS 7.0+`.
 ## Installation
 #### Cocoapods(iOS7+)
 
-1. Add these lines below to your Podfile 
-	
+1. Add these lines below to your Podfile
+
 	```
 	platform :ios, 'xxx'
 	target 'xxx' do
@@ -149,5 +149,3 @@ Drag `FXDanmaku` document to your project
 
 ## License
 FXDanmaku is provided under the MIT license. See LICENSE file for details.
-
-
