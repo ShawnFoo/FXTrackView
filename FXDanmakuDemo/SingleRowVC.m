@@ -19,7 +19,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bulletinBoardHeightConst;
 @property (nonatomic, strong) dispatch_queue_t serialQueue;
 
-@property (nonatomic, weak) NSTimer *addDataTimer;
+@property (nonatomic, strong) NSTimer *addDataTimer;
 
 @end
 
@@ -38,9 +38,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self start:nil];
+}
+
 #pragma mark - Views
 - (void)setupBulletinBoard {
-    
     self.bulletinBoard.backgroundColor = [UIColor whiteColor];
     self.bulletinBoard.configuration = [FXDanmakuConfiguration singleRowConfigurationWithHeight:[DemoBulletinItem itemHeight]];
     [self.bulletinBoard registerClass:[DemoBulletinItem class] forItemReuseIdentifier:[DemoBulletinItem reuseIdentifier]];
@@ -68,12 +72,11 @@
 }
 
 - (IBAction)stop:(id)sender {
-    [self.bulletinBoard stop];
     [self invalidateAddDataTimer];
+    [self.bulletinBoard stop];
 }
 
 - (void)createAddDataTimerIfNeeded {
-    
     if (!self.addDataTimer) {
         __block NSUInteger bIndex = 0;
         __weak typeof(self) weakSelf = self;
@@ -82,11 +85,11 @@
 												target:self
 												 block:^(NSTimer *timer)
 		{
-			typeof(self) self = weakSelf;
-			if (!self) return;
-			DemoBulletinItemData *data = [DemoBulletinItemData dataWithDesc:[NSString stringWithFormat:@"item-%@", @(bIndex++)]
-																 avatarName:[NSString stringWithFormat:@"avatar%@", @(arc4random()%6)]];
-			[self.bulletinBoard addData:data];
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+                DemoBulletinItemData *data = [DemoBulletinItemData dataWithDesc:[NSString stringWithFormat:@"item-%@", @(bIndex++)]
+                                                                     avatarName:[NSString stringWithFormat:@"avatar%@", @(arc4random() % 6)]];
+                [weakSelf.bulletinBoard addData:data];
+            });
 		}];
     }
 }

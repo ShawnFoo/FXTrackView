@@ -3,8 +3,8 @@
 //  FXDanmakuDemo
 //
 //  Github: https://github.com/ShawnFoo/FXDanmaku.git
-//  Version: 1.0.4
-//  Last Modified: 7/16/2017
+//  Version: 1.0.6
+//  Last Modified: 8/25/2018
 //  Created by ShawnFoo on 12/4/2015.
 //  Copyright © 2015 ShawnFoo. All rights reserved.
 //
@@ -146,7 +146,6 @@ NS_ASSUME_NONNULL_BEGIN
  Stop displaying data. Thread-Safe.
  */
 - (void)stop;
-
 
 /** 
  Remove all displaying items on danmaku. Thread-Safe.

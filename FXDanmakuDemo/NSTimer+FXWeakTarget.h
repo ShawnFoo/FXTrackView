@@ -15,7 +15,7 @@ typedef void (^fx_timer_fire_block_t)(NSTimer *timer);
 /**
  不会强引用Target的NSTimer. 当Target释放时, 若关联NSTimer依旧有效, 则会对其调用invalidate, 外部可不管.
  
- 正常方式创建的NSTimer存在这种情况, NSRunLoop -> NSTimer(dispatch_source_t) -> Target -> NSTimer, 有效期间存在循环引用. 必须主动去打破这个环,
+ 正常方式创建的NSTimer存在这种情况, NSRunLoop -> NSTimer(CFRunLooperTimerRef) -> Target -> NSTimer, 有效期间存在循环引用. 必须主动去打破这个环,
  然而Target已经循环引用, 不会执行dealloc方法, 即无法在其dealloc方法中invalidate timer.
  
  使用该类别创建的NSTimer会通过一个Target代理对象来被NSTimer持有, 该代理再弱引用指向原Target, 从而打破循环.

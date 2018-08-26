@@ -94,7 +94,7 @@
 															 target:targetProxy
 														   selector:@selector(fireBlockInvoker:)
 														   userInfo:nil
-															repeats:NO];
+															repeats:repeats];
 		return targetProxy.timer;
 	}
 	else {

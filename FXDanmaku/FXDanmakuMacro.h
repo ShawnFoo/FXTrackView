@@ -58,6 +58,17 @@ dispatch_async(dispatch_get_main_queue(), block);\
 }\
 }
 
+#define FXRunBlockSyncSafe_MainThread(block) {\
+if ([NSThread isMainThread]) {\
+FXRunBlockSafe(block)\
+}\
+else {\
+if (block) {\
+dispatch_sync(dispatch_get_main_queue(), block);\
+}\
+}\
+}
+
 #endif /* __OBJC__ */
 
 #endif /* FXBarrageViewHeader_h */

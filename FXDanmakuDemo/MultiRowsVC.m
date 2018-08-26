@@ -114,7 +114,7 @@
 #pragma mark - FXDanmakuDelegate
 - (void)danmaku:(FXDanmaku *)danmaku didClickItem:(FXDanmakuItem *)item withData:(DemoDanmakuItemData *)data {
     [self fx_presentConfirmViewWithTitle:nil
-                                 message:[NSString stringWithFormat:@"You click %@", data.desc]
+                                 message:[NSString stringWithFormat:@"You clicked item %@", data.desc]
                       confirmButtonTitle:nil
                        cancelButtonTitle:@"Ok"
                           confirmHandler:nil
@@ -129,16 +129,24 @@
 #pragma mark - DataSource
 - (void)addDatasWithCount:(NSUInteger)count {
     static NSUInteger index = 0;
-    for (NSUInteger i = 0; i < count; i++) {
-        DemoDanmakuItemData *data = [DemoDanmakuItemData data];
-        data.avatarName = [NSString stringWithFormat:@"avatar%d", arc4random()%6];
-        data.desc = [NSString stringWithFormat:@"DanmakuItem-%@", @(index++)];
-        [self.danmaku addData:data];
-    }
-    
-    if (!self.danmaku.isRunning) {
-        [self.danmaku start];
-    }
+    __weak typeof(self) wSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        for (NSUInteger i = 0; i < count; i++) {
+            DemoDanmakuItemData *data = [DemoDanmakuItemData data];
+            NSInteger num = arc4random() % 6;
+            data.avatarName = [NSString stringWithFormat:@"avatar%d", (int)num];
+            if (num % 2 == 0) {
+                data.desc = [NSString stringWithFormat:@"DanmakuItem-%@", @(index++)];
+            } else {
+                data.desc = [NSString stringWithFormat:@"Item-%@", @(index++)];
+            }
+            [wSelf.danmaku addData:data];
+        }
+        
+        if (!wSelf.danmaku.isRunning) {
+            [wSelf.danmaku start];
+        }
+    });
 }
 
 #pragma mark - Orientation

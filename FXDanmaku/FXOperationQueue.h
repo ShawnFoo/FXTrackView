@@ -1,5 +1,5 @@
 //
-//  FXGCDOperationQueue.h
+//  FXOperationQueue.h
 //  FXDanmakuDemo
 //
 //  Created by ShawnFoo on 2017/1/15.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FXGCDOperationQueue : NSObject
+@interface FXOperationQueue : NSObject
 
 @property (nonatomic, readonly) dispatch_queue_t queue;
 
