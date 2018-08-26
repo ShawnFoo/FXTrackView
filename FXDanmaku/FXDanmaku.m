@@ -13,8 +13,10 @@
 #import "FXDanmakuItem.h"
 #import "FXSingleRowItemsManager.h"
 #import "FXDanmakuItem_Private.h"
+#import "FXDanmakuPriorityQueue.h"
 #import "FXGCDTimer.h"
 #import "FXOperationQueue.h"
+#import "FXDanmakuPriorityQueue.h"
 
 typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     StatusNotStarted,
@@ -32,7 +34,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
 @property (nonatomic, strong) FXOperationQueue *dataProducerQueue;
 @property (nonatomic, strong) FXOperationQueue *rowProducerQueue;
 
-@property (nonatomic, strong) NSMutableArray<FXDanmakuItemData *> *dataQueue;
+@property (nonatomic, strong) FXDanmakuPriorityQueue *dataQueue;
 @property (nonatomic, strong) FXReuseObjectQueue *reuseItemQueue;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, FXSingleRowItemsManager *> *rowItemsManager;
 @property (nonatomic, strong) NSHashTable<FXGCDTimer *> *resetOccupiedRowTimers;
@@ -172,7 +174,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         FXReturnIfSelfNil
         pthread_mutex_lock(&self->_data_mutex);
         {
-            if ([self insertData:data]) {
+            if ([self enqueueData:data]) {
                 if (!self.hasData) {
                     self.hasData = true;
                     if (self.isRunning) {
@@ -196,7 +198,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         {
             BOOL addedData = false;
             for (FXDanmakuItemData *data in datas) {
-                if ([self insertData:data]) {
+                if ([self enqueueData:data]) {
                     addedData = true;
                 }
             }
@@ -219,7 +221,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         FXReturnIfSelfNil
         pthread_mutex_lock(&self->_data_mutex);
         {
-            [self->_dataQueue removeAllObjects];
+            [self.dataQueue emptyQueue];
             self.hasData = false;
         }
         pthread_mutex_unlock(&self->_data_mutex);
@@ -337,34 +339,18 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         while (!self.hasData) {
             pthread_cond_wait(&self->_data_cons, &self->_data_mutex);
         }
-        data = self->_dataQueue.firstObject;
-        if (data) {
-            [self->_dataQueue removeObjectAtIndex:0];
-        }
-        self.hasData = self->_dataQueue.count > 0;
+        data = [self.dataQueue dequeue];
+        self.hasData = self.dataQueue.count > 0;
     }
-    
     pthread_mutex_unlock(&self->_data_mutex);
     return data;
 }
 
-- (BOOL)insertData:(FXDanmakuItemData *)data {
+- (BOOL)enqueueData:(FXDanmakuItemData *)data {
     if (![self shouldInsertData:data]) {
         return false;
     }
-    if (FXDataPriorityHigh == data.priority) {
-        NSUInteger insertIndex = 0;
-        for (NSUInteger i = 0; i < self.dataQueue.count; i++) {
-            FXDanmakuItemData *data = self.dataQueue[i];
-            if (FXDataPriorityNormal == data.priority) {
-                insertIndex = i;
-                break;
-            }
-        }
-        [self.dataQueue insertObject:data atIndex:insertIndex];
-    } else {
-        [self.dataQueue addObject:data];
-    }
+    [self.dataQueue enqueue:data];
     return true;
 }
 
@@ -733,9 +719,9 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     return _rowProducerQueue;
 }
 
-- (NSMutableArray<FXDanmakuItemData *> *)dataQueue {
+- (FXDanmakuPriorityQueue *)dataQueue {
     if (!_dataQueue) {
-        _dataQueue = [NSMutableArray array];
+        _dataQueue = [[FXDanmakuPriorityQueue alloc] init];
     }
     return _dataQueue;
 }
@@ -773,7 +759,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
 - (DanmakuStatus)status {
     __block DanmakuStatus status = 0;
     FXRunBlockSyncSafe_MainThread(^{
-        status = _status;
+        status = self->_status;
     });
     return status;
 }
@@ -789,8 +775,8 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
 
 - (BOOL)shouldAcceptData {
     DanmakuStatus status = self.status;
-    BOOL stoped = StatusStoped == status;
-    if (stoped || (StatusPaused == status && !_acceptDataWhenPaused)) {
+    if (StatusStoped == status
+        || (StatusPaused == status && !_acceptDataWhenPaused)) {
         return false;
     }
     return true;

@@ -104,7 +104,6 @@
                                 <state key="normal" title="Pause"/>
                                 <connections>
                                     <action selector="pause:" destination="AbT-dB-med" eventType="touchUpInside" id="RAA-Qf-gQw"/>
-                                    <action selector="pause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="X4P-M5-B1e"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MDk-7t-daO">
@@ -117,7 +116,6 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
-                                    <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0gt-Z5-j4F"/>
                                     <action selector="start:" destination="AbT-dB-med" eventType="touchUpInside" id="dG3-Lc-i3H"/>
                                 </connections>
                             </button>
@@ -159,7 +157,6 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Stop"/>
                                 <connections>
-                                    <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dM6-3T-h3I"/>
                                     <action selector="stop:" destination="AbT-dB-med" eventType="touchUpInside" id="ihe-bB-8Cb"/>
                                 </connections>
                             </button>
@@ -211,7 +208,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x7q-zN-Sft" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="112.8" y="965.6671664167917"/>
+            <point key="canvasLocation" x="113" y="1090"/>
         </scene>
         <!--Multi-Rows Demo-->
         <scene sceneID="tne-QT-ifu">
@@ -275,7 +272,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C5f-f8-JjH"/>
+                                    <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7WJ-JN-yTs"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t4R-A9-e0b">

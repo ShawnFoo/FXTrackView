@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) FXDataPriority priority;
 
-
 // Note: Identifier can't be nil or empty string!
 
 + (nullable instancetype)dataWithItemReuseIdentifier:(NSString *)identifier;

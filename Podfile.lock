@@ -6,14 +6,18 @@ DEPENDENCIES:
   - FXDanmaku (from `./`)
   - Masonry
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Masonry
+
 EXTERNAL SOURCES:
   FXDanmaku:
-    :path: ./
+    :path: "./"
 
 SPEC CHECKSUMS:
-  FXDanmaku: a6910de969b0508b1ae8f68b01675cb84da6cea8
+  FXDanmaku: 7b148064ae6ea8d2598a219ab9189cf826fe09d9
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
 
 PODFILE CHECKSUM: 81da9163602680e826ace0f4c4c46198bc0a891d
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

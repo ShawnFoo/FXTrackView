@@ -163,7 +163,10 @@
                                      [self.danmaku start];
                                  }];
 }
+
 #pragma mark For Version below iOS8
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self.danmaku pause];
     // if you could set danmaku.cleanScreenWhenPaused = false, then you need to call 'cleanScreen' method after pause.
@@ -173,5 +176,6 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     [self.danmaku start];
 }
+#endif
 
 @end
