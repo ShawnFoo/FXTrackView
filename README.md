@@ -54,14 +54,14 @@ DemoDanmakuItemData *data = [DemoDanmakuItemData data];
 
 // start running
 if (!self.danmaku.isRunning) {
-	[self.danmaku start];
+    [self.danmaku start];
 }
 ```
 Handle click in delegate method:
 
 ```
 - (void)danmaku:(FXDanmaku *)danmaku didClickItem:(FXDanmakuItem *)item withData:(DemoDanmakuItemData *)data {
-	// handle click event here
+    // handle click event here
 }
 ```
 
@@ -89,10 +89,10 @@ Let's say, your danmaku view's height is 100pt in portrait, but is 200pt in lans
 
 ```
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[self.danmaku pause];
-	[self.danmaku cleanScreen];
+    [self.danmaku pause];
+    [self.danmaku cleanScreen];
 
-	[coordinator animateAlongsideTransition:nil
+    [coordinator animateAlongsideTransition:nil
 								 completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
                                  	// resume danmaku after orientation did change
                                  	[self.danmaku start];
@@ -104,12 +104,12 @@ Let's say, your danmaku view's height is 100pt in portrait, but is 200pt in lans
 
 ```
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self.danmaku pause];
-	[self.danmaku cleanScreen];
+    [self.danmaku pause];
+    [self.danmaku cleanScreen];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[self.danmaku start];
+    [self.danmaku start];
 }
 ```
 
@@ -127,8 +127,8 @@ In addition, you still have chance to decide which data can be added into the qu
 
 ```
 - (BOOL)shouldAddDanmakuItemDataWhenQueueIsFull:(FXDanmakuItemData *)data {
-	// Keep adding data with high priority, even the number of the data in queue reaches maximum count
-	return FXDataPriorityHigh == data.priority;
+    // Keep adding data with high priority, even the number of the data in queue reaches maximum count
+    return FXDataPriorityHigh == data.priority;
 }
 ```
 
