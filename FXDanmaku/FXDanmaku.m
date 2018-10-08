@@ -55,9 +55,9 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
 @implementation FXDanmaku {
 @private
     pthread_mutex_t _row_mutex;
-    pthread_cond_t _row_prod, _row_cons;
+    pthread_cond_t _row_condition;
     pthread_mutex_t _data_mutex;
-    pthread_cond_t _data_prod, _data_cons;
+    pthread_cond_t _data_condition;
 }
 
 @synthesize status = _status;
@@ -86,10 +86,8 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
 - (void)dealloc {
     pthread_mutex_destroy(&_row_mutex);
     pthread_mutex_destroy(&_data_mutex);
-    pthread_cond_destroy(&_row_prod);
-    pthread_cond_destroy(&_row_cons);
-    pthread_cond_destroy(&_data_prod);
-    pthread_cond_destroy(&_data_cons);
+    pthread_cond_destroy(&_row_condition);
+    pthread_cond_destroy(&_data_condition);
     FXLogD(@"FXDanmaku View has been deallocated.");
 }
 
@@ -105,12 +103,10 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     self.layer.masksToBounds = true;
     
     pthread_mutex_init(&_row_mutex, NULL);
-    pthread_cond_init(&_row_prod, NULL);
-    pthread_cond_init(&_row_cons, NULL);
+    pthread_cond_init(&_row_condition, NULL);
     
     pthread_mutex_init(&_data_mutex, NULL);
-    pthread_cond_init(&_data_prod, NULL);
-    pthread_cond_init(&_data_cons, NULL);
+    pthread_cond_init(&_data_condition, NULL);
 }
 
 - (void)calcRowsIfNeeded {
@@ -144,7 +140,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
                 self.hasUnoccupiedRows = self.numOfRows > 0;
                 // wake up consumer queue if needed
                 if (self.isRunning && !hasUnoccupiedRows && self.hasUnoccupiedRows) {
-                    pthread_cond_signal(&self->_row_cons);
+                    pthread_cond_signal(&self->_row_condition);
                 }
             }
             pthread_mutex_unlock(&self->_row_mutex);
@@ -178,7 +174,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
                 if (!self.hasData) {
                     self.hasData = true;
                     if (self.isRunning) {
-                        pthread_cond_signal(&self->_data_cons);
+                        pthread_cond_signal(&self->_data_condition);
                     }
                 }
             }
@@ -205,7 +201,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
             if (!self.hasData && addedData) {
                 self.hasData = true;
                 if (self.isRunning) {
-                    pthread_cond_signal(&self->_data_cons);
+                    pthread_cond_signal(&self->_data_condition);
                 }
             }
         }
@@ -286,7 +282,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         {
             if (!self.hasData) {
                 self.hasData = true;
-                pthread_cond_signal(&self->_data_cons);
+                pthread_cond_signal(&self->_data_condition);
             }
         }
         pthread_mutex_unlock(&self->_data_mutex);
@@ -299,7 +295,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
         {
             if (!self.hasUnoccupiedRows) {
                 self.hasUnoccupiedRows = true;
-                pthread_cond_signal(&self->_row_cons);
+                pthread_cond_signal(&self->_row_condition);
             }
         }
         pthread_mutex_unlock(&self->_row_mutex);
@@ -337,7 +333,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     pthread_mutex_lock(&self->_data_mutex);
     {
         while (!self.hasData) {
-            pthread_cond_wait(&self->_data_cons, &self->_data_mutex);
+            pthread_cond_wait(&self->_data_condition, &self->_data_mutex);
         }
         data = [self.dataQueue dequeue];
         self.hasData = self.dataQueue.count > 0;
@@ -387,7 +383,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     pthread_mutex_lock(&self->_row_mutex);
     {
         while (!self.hasUnoccupiedRows) {
-            pthread_cond_wait(&self->_row_cons, &self->_row_mutex);
+            pthread_cond_wait(&self->_row_condition, &self->_row_mutex);
         }
         UInt8 *array = NULL;
         int n = 0;
@@ -418,7 +414,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     pthread_mutex_lock(&self->_row_mutex);
     {
         while (!self.hasUnoccupiedRows) {
-            pthread_cond_wait(&self->_row_cons, &self->_row_mutex);
+            pthread_cond_wait(&self->_row_condition, &self->_row_mutex);
         }
         BOOL hasRows = false;
         for (NSInteger i = self.numOfRows-1; i > -1; i--) {
@@ -445,7 +441,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
     pthread_mutex_lock(&self->_row_mutex);
     {
         while (!self.hasUnoccupiedRows) {
-            pthread_cond_wait(&self->_row_cons, &self->_row_mutex);
+            pthread_cond_wait(&self->_row_condition, &self->_row_mutex);
         }
         BOOL hasRows = false;
         for (int i = 0; i < self.numOfRows; i++) {
@@ -482,7 +478,7 @@ typedef NS_ENUM(NSUInteger, DanmakuStatus) {
             self.occupiedRowMaskBit -= 1<<row;
             if (!self.hasUnoccupiedRows) {
                 self.hasUnoccupiedRows = true;
-                pthread_cond_signal(&self->_row_cons);
+                pthread_cond_signal(&self->_row_condition);
             }
         }
     }
