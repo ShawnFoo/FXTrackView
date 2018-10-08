@@ -1,8 +1,8 @@
 # FXDanmaku
 
-[![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-Readme-lightgrey.svg)](http://www.jianshu.com/p/42a665b1731d)
+[![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-Readme-lightgrey.svg)](https://shawnfoo.github.io/2017/02/26/FXDanmaku%E5%BC%B9%E5%B9%95%E5%BA%93%E4%BB%8B%E7%BB%8D/)
 ![iOS 7.0+](https://img.shields.io/badge/iOS-7.0%2B-orange.svg)
-![pod](https://img.shields.io/badge/Cocoapods-v1.0.6-blue.svg)
+![pod](https://img.shields.io/badge/Cocoapods-v1.0.7-blue.svg)
 ![compatible](https://img.shields.io/badge/Compatible-Objective--C%2FSwift-yellow.svg)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ShawnFoo/FXDanmaku/blob/master/LICENSE)
 
@@ -64,6 +64,7 @@ Handle click in delegate method:
 	// handle click event here
 }
 ```
+
 More examples in `FXDanmakuDemo.xcworkspace`.
 
 Demo build succeed in Xcode8.
@@ -86,27 +87,31 @@ Let's say, your danmaku view's height is 100pt in portrait, but is 200pt in lans
 
 *For iOS8 And Later*
 
-	- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    	[self.danmaku pause];
-    	[self.danmaku cleanScreen];
+```
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[self.danmaku pause];
+	[self.danmaku cleanScreen];
 
-    	[coordinator animateAlongsideTransition:nil
-									 completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
-                                     	// resume danmaku after orientation did change
-                                     	[self.danmaku start];
-                                 	 }];
-	}
+	[coordinator animateAlongsideTransition:nil
+								 completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+                                 	// resume danmaku after orientation did change
+                                 	[self.danmaku start];
+                             	 }];
+}
+```
 
 *For version lower than iOS8*
 
-	- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    		[self.danmaku pause];
-    		[self.danmaku cleanScreen];
-	}
+```
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[self.danmaku pause];
+	[self.danmaku cleanScreen];
+}
 
-	- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    		[self.danmaku start];
-	}
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[self.danmaku start];
+}
+```
 
 #### 4. How to limit the capacity of the data queue to the FXDanmaku view?
 
@@ -117,6 +122,7 @@ FXDanmakuConfiguration *config = [FXDanmakuConfiguration defaultConfiguration];
 config.dataQueueCapacity = 500;
 // Beyond this value, the data will be discarded.
 ```
+
 In addition, you still have chance to decide which data can be added into the queue when data quque is full through delegate method.
 
 ```
